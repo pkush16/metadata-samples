@@ -43,6 +43,14 @@ public class ApiSearch {
 	}
 	
 */
+	
+	private final String CONTEXT = "/";
+    @GetMapping(value = CONTEXT)
+    public String greeting(){
+        return "Please use swagger-ui.html get list of APIs";
+    }  
+	
+	
 	@GetMapping("/api/search")
 	public String searchBasicGet(@RequestParam String query) {
 		try {
