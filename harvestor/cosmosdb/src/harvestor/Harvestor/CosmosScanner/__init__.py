@@ -20,9 +20,23 @@ def main(mytimer: func.TimerRequest) -> None:
     logging.info("Setting Base URLs")
 
     #Fetching the list of Cosmos DB accounts and read-only keys 
-    input_string = os.environ['ACCOUNT_LIST']
-    acclist= json.loads(input_string) 
-    
+    #input_string = os.environ['ACCOUNT_LIST']
+    #acclist= json.loads(input_string) 
+    acclist= []
+
+    account_names= os.environ['ACCOUNT_NAMES']
+    testsplit= account_names.split('~~')
+    for s in testsplit:
+        account = {}
+        account["ENDPOINT"] = "https://"+ s.split('~')[0] + ".documents.azure.com:443"
+        account["PRIMARYKEY"] = s.split('~')[1]
+        acclist.append(account)
+        
+#https://cosmos-sql-test.documents.azure.com:443
+
+
+    print(testsplit)
+
     #  account_initial_guid for initial assignment of guid for cosmos if enity doesn't e       
     #  database_initial_guid
     
@@ -229,7 +243,7 @@ def main(mytimer: func.TimerRequest) -> None:
         logging.info("Json generator status code \t"+ str(json_generator_response.status_code))
         if api_output.status_code ==200:
             logging.info("Entity created successfully!")
-            logging.info("Atlas status code 2 \t" + str(api_output.status_code))
+            logging.info("Atlas status code  \t" + str(api_output.status_code))
         else:
             logging.error("Error in calling Atlas Wrapper with error code:"+ str(api_output.status_code) + " "+api_output.text)
     else:
@@ -283,6 +297,7 @@ def getQualifiedNameAccount(cosmosdb_uri, qns_url):
     headers = {'Content-type': 'application/json'}
     qns_final_url = qns_url + "azure_cosmosdb_account"
     response=requests.post(qns_final_url,data=json.dumps(qns_request_obj),headers=headers)
+    print(json.dumps(qns_request_obj))
     if response.status_code==200:
         response_text = json.loads(response.content)
         if response_text['isExists']==False:
