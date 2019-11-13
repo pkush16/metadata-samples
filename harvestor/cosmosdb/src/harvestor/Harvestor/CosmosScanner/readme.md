@@ -1,11 +1,15 @@
-# TimerTrigger - Python
+# CosmosScanner 
 
-The `TimerTrigger` makes it incredibly easy to have your functions executed on a schedule. This sample demonstrates a simple use case of calling your function every 5 minutes.
+The `CosmosScanner` is a TimerTrigger python function in Azure which scans the CosmosDB account every 2 minutes to fetch relevant metadata and create/update enitites in the Apache Atlas using various micrososervices like Qualified Name Service, JSON Genertaor and AtlasAPIWrapper.
 
 ## How it works
 
-For a `TimerTrigger` to work, you provide a schedule in the form of a [cron expression](https://en.wikipedia.org/wiki/Cron#CRON_expression)(See the link for full details). A cron expression is a string with 6 separate expressions which represent a given schedule via patterns. The pattern we use to represent every 5 minutes is `0 */5 * * * *`. This, in plain text, means: "When seconds is equal to 0, minutes is divisible by 5, for any hour, day of the month, month, day of the week, or year".
+The TimerTrigger Azure functions runs at a scheduled interval(for testing it is set to every 2 minutes) and using CosmosDB SDK for python fetches the metadata about given CosmosDB accounts, its database(s) and collection(s). The metadata about the azure resources maps to the attributes defined in the Atlas typedefs
+It then calls **QNS** which generates a unique qualified name, an attribute that is mandatory to create entities(of type Referenceable) in Atlas.
+Once we have all the required metadata, **JSON generator** is called to generate json compatible with Atlas APIs. 
+Finally the AtlasAPIWrapper is called to make the relevant Atlas API call.
 
+Deployment ---
 ## Learn more
 
 <TODO> Documentation
